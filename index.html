@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <script src="jsbattleStubber.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="mouse.js"></script>
+    <script src="gameEngine.js"></script>    
+   <script src="tankCode.js"></script>
+  </head>
+  <body>
+<script>
+  var gameEngine = new GameEngine();
+  init(settings,info);
+
+  var lastControl = getControl();
+  var step = function() {
+
+    control = gameEngine.step(lastControl); // run one step of the game engine.
+    gameEngine.render(); 
+
+    state = gameEngine.tanks["bratli"];
+    console.log(loopFunctions.length)
+    for (var i=0; i < loopFunctions.length;i++)
+    {
+      console.time("UpdateLoop")
+      //loop(state, control)
+      loopFunctions[i](state,control)
+      console.timeEnd("UpdateLoop")
+    }
+    
+    lastControl = control;
+    render();
+    animate(step);
+};
+
+//var animate = function(callback) { window.setTimeout(callback, 1000/60) };
+
+var animate = window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  function(callback) { window.setTimeout(callback, 1000/60) };
+
+
+  
+window.onload = function() {
+    document.body.appendChild(debugCanvas1);
+    document.body.appendChild(canvasForGame);
+    animate(step);
+    Mouse.initialize("#gameArea");
+  };
+
+  var keysDown = {};
+
+  window.addEventListener("keydown", function(event) {
+    keysDown[event.keyCode] = true;
+  });
+  
+  window.addEventListener("keyup", function(event) {
+    delete keysDown[event.keyCode];
+  });
+
+
+
+</script>
+
+  </body>
+</html>
