@@ -1,5 +1,6 @@
-importScripts('lib/tank.js');
-
+if( 'function' === typeof importScripts) {
+  importScripts('lib/tank.js');
+}
 
 /*
 * TODO: 
@@ -213,7 +214,7 @@ function simulationStepEnemyInformation(state, simulationStep) {
 
 function simulationStepForBullets() 
 {
-for(var key in bullets) {
+  for(var key in bullets) {
   	    var bullet1 = bullets[key];
         bullet1.x +=  Math.cos(bullet1.angle*DEG2RAD)*bullet1.speed
       	bullet1.y +=  Math.sin(bullet1.angle*DEG2RAD)*bullet1.speed
@@ -222,7 +223,7 @@ for(var key in bullets) {
          delete bullets[key];
          console.log("DELETED BULLET")
        }
-     }
+  }
 }
 
 function getXYFromTwoBullets(state)

@@ -1,3 +1,10 @@
+// This is the gameEngine.
+// It takes care of generating bullets into the game and 
+// game dynamics.
+// e.g. What you see on a radar, where the tank is and where it goes when
+// you give it a control.
+// The state and control objects are same as in tankwars.
+
 var debugCanvas1 = document.createElement('canvas');
 debugCanvas1.id = "simulationArea";
 var width = 400;
@@ -205,6 +212,8 @@ function getControl()
 
     for (let id in gameEngine.bullets)
     {
+      // This copies the gameEngine bullet into the bullets that are visible for
+      // the player through the radar.
       bullets[i] = gameEngine.bullets[id].createPlayerBullet();
       i++;
     }
@@ -294,50 +303,24 @@ class GameEngine
 
     this.bulletId = 0;
     this.bullets = {}
-
-    let ranPosX = 0;
-    let ranPosY = 0;
-    for (let i = 0; i< 1;  i++)
-    {
-    ranPosX +=220;// (Math.random()-0.5)*2*150
-    //let ranPosY = (Math.random()-0.5)*2*250
-    //this.addBullet(425-60+ranPosX,500+ranPosY,-120,0.1)
-    //this.addBullet(425-60-ranPosX,500+ranPosY,-60,0.1)
    
-//    this.addBullet(425-50+ranPosX,500+ranPosY,-120,0.1)
-   // this.addBullet(425-50+ranPosX+300,380+ranPosY,-160,0.1)
-   
-  //this.addBullet(425+20-ranPosX-300,380+ranPosY,-20,0.1)
- // this.addBullet(425,0+ranPosY,90,0.1)
-  this.addBullet(325,0+ranPosY,60,0.1)
-  this.addBullet(325,400+ranPosY,-60,0.1)
-   
-   //this.addBullet(425+50-ranPosX-300,380+ranPosY,-20,0.1)
-   //  this.addBullet(425,500,-90,0.1)
-   
-    // this bullet will never hit the player, so dont take it into account.
-    this.addBullet(220-ranPosX,215+ranPosY,-1,0.1)
-    }
   }
 
   createRandomBullet()
   {
     let ranPosX = (Math.random()-0.5)*2*300
     let ranPosY = (Math.random()-0.5)*2*150
-    //this.addBullet(425+ranPosX,500+ranPosY,-90,0.1)
     let angle = Math.random()*70-35
-    //this.addBullet(425-60-ranPosX*2,500+ranPosY,-90+angle,0.1)
-    if (this.simulationStep % 5 < 1)
+    
+    if (this.simulationStep % 8 < 2)  // Expression of how often to spawn new bullets.
     {
-      this.addBullet(400+ranPosX,3,90+30+angle,0.1)
-      this.addBullet(425+ranPosX,600+ranPosY,-90+30+angle,0.1)
+      this.addBullet(Math.max(3,400+ranPosX),3,90+30+angle,0.1)
+      this.addBullet(Math.max(3,400+ranPosX),Math.min(600+ranPosY,gameHeight-1),-90+30+angle,0.1)
     }
 
-
-    if (this.simulationStep % 200 == 0)
+    if (this.simulationStep % 2 == 0)
     {
-     // this.addBullet(425+ranPosX,500+ranPosY,-120+angle,0.1)
-     this.addBullet(425,600,-90,0.1)
+     //this.addBullet(425,gameHeight-1,-90,0.1)
     }
   }
 
@@ -369,13 +352,12 @@ class GameEngine
   for (var tankName in this.tanks){
     this.tanks[tankName].simulate(control);
   }
-
   for (var bulletName in this.bullets) {
-    if (this.bullets[bulletName].step() !== true)
+    if (this.bullets[bulletName].step() === false)
     {
       delete this.bullets[bulletName]
     }  
-  }
+  } 
 
   state = this.tanks["bratli"];
   control = this.resetControl(control);
@@ -418,21 +400,32 @@ class GameBullet {
       return new Bullet(this.id,this.x,this.y,this.angle,this.damage, maze);
     }
   
-  
     step()
     {
       this.x += Math.cos(this.angle*DEG2RAD)*this.speed;
       this.y += Math.sin(this.angle*DEG2RAD)*this.speed;
-  
       
-      // If it is outside the screen, then remove it.
-      if (this.y < 0) 
+      // If it is inside the screen, then return true
+      if (this.pointInsideOfGameArea(this)) 
       {
-        return false;
+        return true;
       }
-      return true;
+      // If it is outside the screen, then return true
+      return false;
+      
     }
   
+    pointInsideOfGameArea(point) 
+    {
+      let keepOnSimulation = true;
+      keepOnSimulation = keepOnSimulation & (point.y > 0);
+      keepOnSimulation = keepOnSimulation & (point.y < gameHeight);
+      keepOnSimulation = keepOnSimulation & (point.x > 0);
+      keepOnSimulation = keepOnSimulation & (point.x < gameWidth);
+      return keepOnSimulation;
+    }
+
+
     render() 
     {
   

@@ -13,9 +13,12 @@
 
   var lastControl = getControl();
   var step = function() {
-
+    console.time("gameEngine.step")
     control = gameEngine.step(lastControl); // run one step of the game engine.
+    console.timeEnd("gameEngine.step")
+    console.time("gameEngine.render")
     gameEngine.render(); 
+    console.timeEnd("gameEngine.render")
 
     state = gameEngine.tanks["bratli"];
     console.log(loopFunctions.length)
