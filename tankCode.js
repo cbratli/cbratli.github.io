@@ -105,11 +105,11 @@ class UpDownCounter
 }
 
 
-
-tank.init(function(settings, info) {
-	// initialize tank here
-    init(settings,info);
-});
+// Note removed to test if it works on github.io.
+//tank.init(function(settings, info) {
+//	// initialize tank here
+//    init(settings,info);
+//});
 
 function init(settings,info)
 {
