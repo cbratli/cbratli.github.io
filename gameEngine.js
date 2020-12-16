@@ -47,8 +47,8 @@ function getControl()
   class InternalTank{
     constructor(x,y,angle)
     {
-      this.sizeX = 35; //game.TANK_SIZE_X; //PROPS.TANK_SIZE_X;
-      this.sizeY = 10; //game.TANK_SIZE_Y; //PROPS.TANK_SIZE_Y;
+      this.sizeX = game.TANK_SIZE_X; //PROPS.TANK_SIZE_X;
+      this.sizeY = game.TANK_SIZE_Y; //PROPS.TANK_SIZE_Y;
   
       this.x = x;
       this.y = y;
