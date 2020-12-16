@@ -1,6 +1,8 @@
 var settings = {}
 var info = {}
-var tank = {};
+
+function tank () {  }
+//var tank = new Tank();
 
 var loopFunctions = [];
 
